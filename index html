@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>برنامه ترک سیگار حرفه‌ای</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Vazir",sans-serif;}
+body{background:#f0f2f5;color:#333;display:flex;flex-direction:column;min-height:100vh;}
+.app-header{background:#4CAF50;color:white;padding:15px;text-align:center;font-size:1.5rem;font-weight:bold;position:relative;}
+#langSwitch{position:absolute;left:10px;top:10px;padding:5px 10px;border:none;border-radius:5px;cursor:pointer;}
+main{flex:1;overflow:auto;padding-bottom:100px;}
+.page{display:none;padding:20px;transition:opacity 0.3s;}
+.page.active{display:block;opacity:1;}
+.status-container{text-align:center;}
+.time-display{font-size:1.2rem;margin:15px 0;animation:pulse 1s infinite;}
+@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+#stats{display:flex;justify-content:space-around;margin:15px 0;flex-wrap:wrap;}
+.stat-item span{display:block;font-weight:bold;}
+.buttons{display:flex;justify-content:center;gap:15px;margin-top:20px;flex-wrap:wrap;position:sticky;bottom:10px;background:#f0f2f5;padding:10px;z-index:1;}
+button{padding:10px 15px;font-size:1rem;cursor:pointer;border:none;border-radius:8px;display:flex;align-items:center;gap:5px;transition: transform 0.2s;}
+button:hover{transform:scale(1.05);}
+.btn-start{background:#4CAF50;color:white;}
+.btn-reset{background:#f44336;color:white;}
+.btn-save{background:#2196F3;color:white;width:100%;margin-top:15px;}
+.bottom-nav{display:flex;border-top:1px solid #ccc;background:#fff;position:sticky;bottom:0;z-index:2;}
+.tab-btn{flex:1;text-align:center;padding:10px 0;cursor:pointer;border:none;background:none;font-size:1rem;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.tab-btn.active{background:#4CAF50;color:white;}
+.progress-container{margin:10px 0;text-align:left;}
+.progress-label{font-weight:bold;margin-bottom:3px;display:flex;justify-content:space-between;}
+.progress-bar{width:100%;background:#ddd;height:18px;border-radius:9px;overflow:hidden;}
+.progress-fill{height:100%;width:0%;border-radius:9px;transition: width 1s,background 1s;}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="app-header">
+    <span id="appTitle" data-i18n="appTitle">برنامه ترک سیگار</span>
+    <button id="langSwitch" title="تغییر زبان">EN</button>
+  </header>
+
+  <main id="pages">
+    <section id="page-status" class="page active">
+      <div class="status-container">
+        <h2 data-i18n="status">وضعیت فعلی</h2>
+        <p id="quitStatusText" data-i18n="startPrompt">برای شروع، دکمه ترک را بزنید.</p>
+        <div id="startDateDisplay"></div>
+        <div id="timeDisplay" class="time-display"></div>
+        <div id="stats">
+          <div class="stat-item"><span data-i18n="cigsSaved">سیگار نکشیده:</span><strong id="cigsSaved">0</strong></div>
+          <div class="stat-item"><span data-i18n="moneySaved">پول پس‌انداز‌شده:</span><strong id="moneySaved">0 تومان</strong></div>
+        </div>
+        <div class="health-progress"></div>
+        <div class="buttons">
+          <button id="startQuit" class="btn-start">🚭 <span data-i18n="startQuit">ترک سیگار</span></button>
+          <button id="resetQuit" class="btn-reset">🚬 <span data-i18n="resetQuit">می‌خواهم سیگار بکشم</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-settings" class="page">
+      <h2 data-i18n="settings">تنظیمات ⚙️</h2>
+      <form id="settingsForm">
+        <label data-i18n="pricePerPack">قیمت هر بسته (تومان):</label>
+        <input type="number" id="pricePerPack" placeholder="مثلاً 90000" required>
+        <label data-i18n="cigsPerPack">تعداد سیگار در هر بسته:</label>
+        <input type="number" id="cigsPerPack" placeholder="مثلاً 20" required>
+        <label data-i18n="cigsPerDay">تعداد سیگار در روز:</label>
+        <input type="number" id="cigsPerDay" placeholder="مثلاً 15" required>
+        <button type="submit" class="btn-save">💾 <span data-i18n="saveSettings">ذخیره تنظیمات</span></button>
+      </form>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="tab-btn active" data-target="page-status"><span data-i18n="status">وضعیت</span></button>
+    <button class="tab-btn" data-target="page-settings"><span data-i18n="settings">تنظیمات</span></button>
+  </nav>
+</div>
+
+<script>
+// ترجمه
+const translations={
+  en:{appTitle:'Quit Smoking App',status:'Status',startPrompt:'Press "Start Quit" to begin.',
+  cigsSaved:'Cigarettes avoided:',moneySaved:'Money saved:',startQuit:'Start Quit',resetQuit:'I want to smoke',
+  settings:'Settings ⚙️',pricePerPack:'Price per pack:',cigsPerPack:'Cigarettes per pack:',cigsPerDay:'Cigarettes per day:',
+  saveSettings:'Save Settings',startDate:'Quit start date:'},
+  fa:{appTitle:'برنامه ترک سیگار',status:'وضعیت فعلی',startPrompt:'برای شروع، دکمه ترک را بزنید.',
+  cigsSaved:'سیگار نکشیده:',moneySaved:'پول پس‌انداز‌شده:',startQuit:'ترک سیگار',resetQuit:'می‌خواهم سیگار بکشم',
+  settings:'تنظیمات ⚙️',pricePerPack:'قیمت هر بسته (تومان):',cigsPerPack:'تعداد سیگار در هر بسته:',
+  cigsPerDay:'تعداد سیگار در روز:',saveSettings:'ذخیره تنظیمات',startDate:'زمان شروع ترک:'}
+};
+let currentLang='fa';
+document.getElementById('langSwitch').addEventListener('click',()=>{
+  currentLang=currentLang==='fa'?'en':'fa';
+  translatePage();
+});
+function translatePage(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(translations[currentLang][key]) el.textContent=translations[currentLang][key];
+  });
+}
+
+// تب‌ها
+const tabs=document.querySelectorAll('.tab-btn');
+const pages=document.querySelectorAll('.page');
+tabs.forEach(tab=>tab.addEventListener('click',()=>{
+  tabs.forEach(t=>t.classList.remove('active'));
+  pages.forEach(p=>p.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById(tab.dataset.target).classList.add('active');
+}));
+
+// تنظیمات
+const settingsForm=document.getElementById('settingsForm');
+settingsForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  localStorage.setItem('pricePerPack',document.getElementById('pricePerPack').value);
+  localStorage.setItem('cigsPerPack',document.getElementById('cigsPerPack').value);
+  localStorage.setItem('cigsPerDay',document.getElementById('cigsPerDay').value);
+  alert(currentLang==='fa'?'تنظیمات ذخیره شد ✅':'Settings saved ✅');
+});
+
+// مراحل سلامتی
+const healthStages=[
+  {name:'بازگشت اکسیژن و کربن مونوکسید', duration:8*3600, color:'#4caf50'},
+  {name:'کاهش خطر مرگ ناگهانی', duration:24*3600, color:'#2196F3'},
+  {name:'حواس چشایی و بویایی', duration:48*3600, color:'#FF9800'},
+  {name:'عملکرد تنفسی استاندارد', duration:14*24*3600, color:'#9C27B0'},
+  {name:'رفع وابستگی جسمی به نیکوتین', duration:30*24*3600, color:'#f44336'},
+  {name:'بهبود گردش خون و پوست', duration:90*24*3600, color:'#00BCD4'}
+];
+const progressContainer=document.querySelector('.health-progress');
+healthStages.forEach(stage=>{
+  const container=document.createElement('div'); container.className='progress-container';
+  const label=document.createElement('div'); label.className='progress-label';
+  label.innerHTML=`<span>${stage.name}</span><span class="percent">0%</span>`;
+  const bar=document.createElement('div'); bar.className='progress-bar';
+  const fill=document.createElement('div'); fill.className='progress-fill';
+  fill.style.background=stage.color;
+  bar.appendChild(fill);
+  container.appendChild(label);
+  container.appendChild(bar);
+  progressContainer.appendChild(container);
+  stage.element={fill:fill, percentLabel:label.querySelector('.percent')};
+});
+
+// تایمر و محاسبات
+let startTime=null;
+let timerInterval;
+const startBtn=document.getElementById('startQuit');
+const resetBtn=document.getElementById('resetQuit');
+
+function loadStartTime(){
+  const saved=localStorage.getItem('quitStartTime');
+  if(saved){startTime=new Date(saved); startTimer();}
+}
+function startTimer(){
+  updateStats();
+  timerInterval=setInterval(updateStats,1000);
+}
+startBtn.addEventListener('click',()=>{
+  startTime=new Date();
+  localStorage.setItem('quitStartTime',startTime);
+  startTimer();
+});
+resetBtn.addEventListener('click',()=>{
+  clearInterval(timerInterval);
+  localStorage.removeItem('quitStartTime');
+  startTime=null;
+  document.getElementById('timeDisplay').textContent='';
+  document.getElementById('cigsSaved').textContent='0';
+  document.getElementById('moneySaved').textContent='0 تومان';
+  document.getElementById('startDateDisplay').textContent='';
+  healthStages.forEach(s=>{s.element.fill.style.width='0%'; s.element.percentLabel.textContent='0%';});
+});
+
+// تاریخ شمسی
+function toJalaali(date){
+  const g_y=date.getFullYear(),g_m=date.getMonth()+1,g_d=date.getDate();
+  let gy=g_y-1600, gm=g_m-1, gd=g_d-1;
+  let g_day_no=365*gy+Math.floor((gy+3)/4)-Math.floor((gy+99)/100)+Math.floor((gy+399)/400);
+  for(let i=0;i<gm;i++) g_day_no+=[31,28,31,30,31,30,31,31,30,31,30,31][i];
+  if(g_m>2 && ((g_y%4==0 && g_y%100!=0)||g_y%400==0)) g_day_no+=1;
+  g_day_no+=gd;
+  let j_day_no=g_day_no-79;
+  let j_np=Math.floor(j_day_no/12053); j_day_no%=12053;
+  let jy=979+33*j_np+4*Math.floor(j_day_no/1461); j_day_no%=1461;
+  if(j_day_no>=366){jy+=Math.floor((j_day_no-1)/365); j_day_no=(j_day_no-1)%365;}
+  const jm=(j_day_no<186)?1+Math.floor(j_day_no/31):7+Math.floor((j_day_no-186)/30);
+  const jd=(j_day_no<186)?1+(j_day_no%31):1+((j_day_no-186)%30);
+  return `${jy}/${jm.toString().padStart(2,'0')}/${jd.toString().padStart(2,'0')}`;
+}
+function formatDuration(diff){
+  const days=Math.floor(diff/86400);
+  const hours=Math.floor((diff%86400)/3600);
+  const minutes=Math.floor((diff%3600)/60);
+  const seconds=diff%60;
+  if(currentLang==='fa')
+    return `${days} روز، ${hours} ساعت، ${minutes} دقیقه و ${seconds} ثانیه`;
+  else
+    return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+}
+function updateStats(){
+  if(!startTime) return;
+  const now=new Date();
+  const diff=Math.floor((now-startTime)/1000);
+  document.getElementById('timeDisplay').textContent=formatDuration(diff);
+  document.getElementById('startDateDisplay').textContent=(currentLang==='fa'?'زمان شروع ترک: ':'Quit start: ')+toJalaali(startTime)+' '+startTime.toLocaleTimeString();
+  const cigsPerDay=Number(localStorage.getItem('cigsPerDay'))||15;
+  const cigsSaved=Math.floor((diff/86400)*cigsPerDay);
+  document.getElementById('cigsSaved').textContent=cigsSaved;
+  const pricePerPack=Number(localStorage.getItem('pricePerPack'))||90000;
+  const cigsPerPack=Number(localStorage.getItem('cigsPerPack'))||20;
+  const moneySaved=Math.floor((cigsSaved/cigsPerPack)*pricePerPack);
+  document.getElementById('moneySaved').textContent=currentLang==='fa'?moneySaved+' تومان':moneySaved+' Toman';
+  // سلامت
+  healthStages.forEach(stage=>{
+    const percent=Math.min(100,(diff/stage.duration)*100);
+    stage.element.fill.style.width=percent+'%';
+    stage.element.percentLabel.textContent=Math.floor(percent)+'%';
+  });
+}
+loadStartTime();
+</script>
+</body>
+</html>
