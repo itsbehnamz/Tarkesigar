@@ -135,8 +135,6 @@
   </nav>
 </div>
 
-<!-- موزیک پس‌زمینه آزاد -->
-<audio id="bgAudio" src="https://goodmusiic.musitraf.com/rington/Ringtone-Nashkan-Delamo.mp3" crossorigin="anonymous"></audio>
 
 <script>
 /* ---------- توابع کمکی ---------- */
@@ -439,5 +437,52 @@ if(localStorage.getItem(LS.start)){
 renderRecords();
 
 </script>
+
+
+<!-- 🎵 موزیک پس‌زمینه -->
+<audio id="bgMusic" autoplay loop>
+  <source src="https://goodmusiic.musitraf.com/rington/Ringtone-Nashkan-Delamo.mp3">
+</audio>
+
+<!-- دکمه کنترل موزیک -->
+<button id="musicToggle" style="
+  position: fixed;
+  bottom: 70px;
+  left: 15px;
+  background: linear-gradient(45deg, #4CAF50, #00BCD4);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.3s;
+  z-index: 10;
+">🎵</button>
+
+<script>
+const music = document.getElementById("bgMusic");
+const toggle = document.getElementById("musicToggle");
+
+// مرورگرها تا وقتی کاربر کلیک نکرده، پخش خودکار را بلاک می‌کنند.
+document.body.addEventListener("click", () => {
+  if (music.paused) music.play().catch(()=>{});
+}, { once: true });
+
+toggle.addEventListener("click", () => {
+  if (music.paused) {
+    music.play();
+    toggle.textContent = "🔊";
+  } else {
+    music.pause();
+    toggle.textContent = "🔇";
+  }
+});
+</script>
+
+
+
 </body>
 </html>
