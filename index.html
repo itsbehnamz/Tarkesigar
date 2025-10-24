@@ -1,193 +1,160 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>برنامه ترک سیگار حرفه‌ای</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>برنامه ترک سیگار — کامل</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Vazir",sans-serif;}
-body{background:#f0f2f5;color:#333;display:flex;flex-direction:column;min-height:100vh;}
-.app-header{background:#4CAF50;color:white;padding:15px;text-align:center;font-size:1.5rem;font-weight:bold;position:relative;}
-#langSwitch{position:absolute;left:10px;top:10px;padding:5px 10px;border:none;border-radius:5px;cursor:pointer;}
-main{flex:1;overflow:auto;padding-bottom:100px;}
-.page{display:none;padding:20px;transition:opacity 0.3s;}
-.page.active{display:block;opacity:1;}
-.status-container{text-align:center;}
-.time-display{font-size:1.2rem;margin:15px 0;animation:pulse 1s infinite;}
-@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
-#stats{display:flex;justify-content:space-around;margin:15px 0;flex-wrap:wrap;}
-.stat-item span{display:block;font-weight:bold;}
-.buttons{display:flex;justify-content:center;gap:15px;margin-top:20px;flex-wrap:wrap;position:sticky;bottom:10px;background:#f0f2f5;padding:10px;z-index:1;}
-button{padding:10px 15px;font-size:1rem;cursor:pointer;border:none;border-radius:8px;display:flex;align-items:center;gap:5px;transition: transform 0.2s;}
-button:hover{transform:scale(1.05);}
-.btn-start{background:#4CAF50;color:white;}
-.btn-reset{background:#f44336;color:white;}
-.btn-save{background:#2196F3;color:white;width:100%;margin-top:15px;}
-.bottom-nav{display:flex;border-top:1px solid #ccc;background:#fff;position:sticky;bottom:0;z-index:2;}
-.tab-btn{flex:1;text-align:center;padding:10px 0;cursor:pointer;border:none;background:none;font-size:1rem;display:flex;flex-direction:column;align-items:center;gap:3px;}
-.tab-btn.active{background:#4CAF50;color:white;}
-.progress-container{margin:10px 0;text-align:left;}
-.progress-label{font-weight:bold;margin-bottom:3px;display:flex;justify-content:space-between;}
-.progress-bar{width:100%;background:#ddd;height:18px;border-radius:9px;overflow:hidden;}
-.progress-fill{height:100%;width:0%;border-radius:9px;transition: width 1s,background 1s;}
+  :root{
+    --bg:#071226; --card:#0f1724; --muted:#9fb6cf; --accent1:#06b6d4; --accent2:#4caf50; --danger:#f44336;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Vazir, Tahoma, sans-serif;background:linear-gradient(120deg,#001022 0%, #071126 50%, #041018 100%);color:#e6eef8}
+  .app{max-width:1100px;margin:20px auto;padding:18px;display:grid;grid-template-columns:1fr;gap:18px}
+  header{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:linear-gradient(90deg,var(--accent2),var(--accent1));box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+  h1{font-size:18px;margin:0}
+  #langSwitch{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:6px 10px;border-radius:8px;color:var(--muted);cursor:pointer}
+  main{display:grid;grid-template-columns:1fr;gap:14px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.5)}
+  .status{display:flex;flex-direction:column;gap:8px}
+  .time{font-weight:700;font-size:1.35rem;color:#ffd54a;text-shadow:0 0 8px rgba(255,213,74,0.12)}
+  .stats{display:flex;gap:12px;justify-content:flex-start;flex-wrap:wrap}
+  .stat{background:rgba(255,255,255,0.02);padding:8px 12px;border-radius:10px;min-width:160px}
+  .controls{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+  button.btn{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+  .start{background:var(--accent2);color:#012}
+  .reset{background:var(--danger);color:#fff}
+  .small{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);cursor:pointer;color:var(--muted)}
+  .settings{display:flex;flex-direction:column;gap:8px}
+  .settings input{padding:8px;border-radius:8px;border:0;background:transparent;color:inherit;border:1px solid rgba(255,255,255,0.02)}
+  .progress-row{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+  .label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+  .bar{height:14px;background:rgba(255,255,255,0.03);border-radius:10px;overflow:hidden}
+  .fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent1),#8e44ad);transition:width 0.8s}
+  .records{display:grid;gap:8px}
+  ul{list-style:none;padding:0;margin:0}
+  li{padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+  .tabs{display:flex;gap:8px}
+  .tab-btn{padding:8px 12px;border-radius:10px;border:0;background:rgba(255,255,255,0.02);cursor:pointer;color:var(--muted)}
+  .tab-btn.active{background:linear-gradient(90deg,var(--accent2),var(--accent1));color:#012}
+  nav.bottom{position:fixed;left:0;right:0;bottom:14px;margin:auto;max-width:1100px;display:flex;gap:6px;padding:8px;background:rgba(2,6,23,0.6);border-radius:14px;justify-content:space-around}
+  @media (min-width:900px){main{grid-template-columns:1fr 380px} .status{align-items:flex-start}}
 </style>
 </head>
 <body>
-<div id="app">
-  <header class="app-header">
-    <span id="appTitle" data-i18n="appTitle">ربات ترک سیگار بهنام </span>
-    <button id="langSwitch" title="تغییر زبان">EN</button>
+<div class="app" id="app">
+  <header>
+    <h1>ربات ترک سیگار — علمی و کامل</h1>
+    <div>
+      <button id="langSwitch" class="small">EN</button>
+    </div>
   </header>
 
-  <main id="pages">
-    <section id="page-status" class="page active">
-      <div class="status-container">
-        <h2 data-i18n="status">وضعیت فعلی</h2>
-        <p id="quitStatusText" data-i18n="startPrompt">برای شروع، از پایین صفحه دکمه ترک را بزنید.</p>
-        <div id="startDateDisplay"></div>
-        <div id="timeDisplay" class="time-display"></div>
-        <div id="stats">
-          <div class="stat-item"><span data-i18n="cigsSaved">سیگار نکشیده:</span><strong id="cigsSaved">0</strong></div>
-          <div class="stat-item"><span data-i18n="moneySaved">پول پس‌انداز‌شده:</span><strong id="moneySaved">0 تومان</strong></div>
+  <main>
+    <!-- وضعیت و تایمر -->
+    <section class="card status" id="statusCard">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div id="userGreeting" style="font-weight:700">سلام، <span id="userNameLabel">کاربر</span></div>
+          <div id="startDate" style="font-size:13px;color:var(--muted);margin-top:6px">--</div>
         </div>
-        <div class="health-progress"></div>
-        <div class="buttons">
-          <button id="startQuit" class="btn-start">🚭 <span data-i18n="startQuit">ترک سیگار</span></button>
-          <button id="resetQuit" class="btn-reset">🚬 <span data-i18n="resetQuit">می‌خواهم سیگار بکشم</span></button>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="musicBtn" class="small">موزیک: خاموش</button>
         </div>
+      </div>
+
+      <div class="time" id="timeDisplay" style="margin-top:12px">0 روز، 00 ساعت، 00 دقیقه و 00 ثانیه</div>
+
+      <div class="stats" style="margin-top:10px">
+        <div class="stat">سیگار نکشیده: <strong id="cigsSaved">0</strong></div>
+        <div class="stat">پول پس‌انداز: <strong id="moneySaved">0 تومان</strong></div>
+      </div>
+
+      <div id="healthContainer" style="width:100%;margin-top:12px"></div>
+
+      <div class="controls">
+        <button id="startBtn" class="btn start">🚭 شروع ترک</button>
+        <button id="resetBtn" class="btn reset">🚬 ریست و ذخیره رکورد</button>
+        <button id="changeNameBtn" class="small">تغییر نام</button>
       </div>
     </section>
 
-    <section id="page-settings" class="page">
-      <h2 data-i18n="settings">تنظیمات ⚙️</h2>
-      <form id="settingsForm">
-        <label data-i18n="pricePerPack">قیمت هر بسته (تومان):</label>
-        <input type="number" id="pricePerPack" placeholder="مثلاً 90000" required>
-        <label data-i18n="cigsPerPack">تعداد سیگار در هر بسته:</label>
-        <input type="number" id="cigsPerPack" placeholder="مثلاً 20" required>
-        <label data-i18n="cigsPerDay">تعداد سیگار در روز:</label>
-        <input type="number" id="cigsPerDay" placeholder="مثلاً 15" required>
-        <button type="submit" class="btn-save">💾 <span data-i18n="saveSettings">ذخیره تنظیمات</span></button>
-      </form>
-    </section>
+    <!-- تنظیمات و رکوردها (ستونی در سمت راست) -->
+    <aside style="padding-left:10px">
+      <div class="card">
+        <h3 style="margin:0 0 8px 0">تنظیمات</h3>
+        <form id="settingsForm" class="settings">
+          <label>قیمت هر بسته (تومان)
+            <input id="pricePerPack" type="number" placeholder="90000" value="90000">
+          </label>
+          <label>تعداد سیگار در هر بسته
+            <input id="cigsPerPack" type="number" placeholder="20" value="20">
+          </label>
+          <label>تعداد سیگار در روز
+            <input id="cigsPerDay" type="number" placeholder="15" value="15">
+          </label>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button type="submit" class="small">ذخیره</button>
+            <button type="button" id="exportBtn" class="small">خروجی JSON</button>
+          </div>
+        </form>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="card records">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-weight:700">رکوردها 🏆</div>
+          <div class="tabs">
+            <button class="tab-btn active" data-target="personalTab" id="tabPersonal">شخصی</button>
+            <button class="tab-btn" data-target="allTab" id="tabAll">همه کاربران</button>
+          </div>
+        </div>
+
+        <div id="personalTab" style="display:block">
+          <div style="margin-bottom:8px;color:var(--muted)">بهترین رکورد شما: <strong id="bestRecord">—</strong></div>
+          <ul id="personalList" style="max-height:220px;overflow:auto"></ul>
+        </div>
+
+        <div id="allTab" style="display:none">
+          <ul id="allList" style="max-height:220px;overflow:auto"></ul>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="clearRecordsBtn" class="small">حذف همه رکوردها</button>
+          <button id="importBtn" class="small">بارگذاری JSON</button>
+        </div>
+      </div>
+    </aside>
   </main>
 
-  <nav class="bottom-nav">
-    <button class="tab-btn active" data-target="page-status"><span data-i18n="status">وضعیت</span></button>
-    <button class="tab-btn" data-target="page-settings"><span data-i18n="settings">تنظیمات</span></button>
+  <nav class="bottom">
+    <div class="tab active" id="navStatus">وضعیت</div>
+    <div class="tab" id="navSettings">تنظیمات</div>
+    <div class="tab" id="navRecords">رکوردها</div>
   </nav>
 </div>
 
+<!-- موزیک پس‌زمینه آزاد -->
+<audio id="bgAudio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" crossorigin="anonymous"></audio>
+
 <script>
-// ترجمه
-const translations={
-  en:{appTitle:'Quit Smoking App',status:'Status',startPrompt:'Press "Start Quit" to begin.',
-  cigsSaved:'Cigarettes avoided:',moneySaved:'Money saved:',startQuit:'Start Quit',resetQuit:'I want to smoke',
-  settings:'Settings ⚙️',pricePerPack:'Price per pack:',cigsPerPack:'Cigarettes per pack:',cigsPerDay:'Cigarettes per day:',
-  saveSettings:'Save Settings',startDate:'Quit start date:'},
-  fa:{appTitle:'برنامه ترک سیگار',status:'وضعیت فعلی',startPrompt:'برای شروع، دکمه ترک را بزنید.',
-  cigsSaved:'سیگار نکشیده:',moneySaved:'پول پس‌انداز‌شده:',startQuit:'ترک سیگار',resetQuit:'می‌خواهم سیگار بکشم',
-  settings:'تنظیمات ⚙️',pricePerPack:'قیمت هر بسته (تومان):',cigsPerPack:'تعداد سیگار در هر بسته:',
-  cigsPerDay:'تعداد سیگار در روز:',saveSettings:'ذخیره تنظیمات',startDate:'زمان شروع ترک:'}
-};
-let currentLang='fa';
-document.getElementById('langSwitch').addEventListener('click',()=>{
-  currentLang=currentLang==='fa'?'en':'fa';
-  translatePage();
-});
-function translatePage(){
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const key=el.getAttribute('data-i18n');
-    if(translations[currentLang][key]) el.textContent=translations[currentLang][key];
-  });
+/* ---------- توابع کمکی ---------- */
+function pad(n){return n.toString().padStart(2,'0');}
+function formatDuration(totalSeconds){
+  const days=Math.floor(totalSeconds/86400);
+  const hours=Math.floor((totalSeconds%86400)/3600);
+  const minutes=Math.floor((totalSeconds%3600)/60);
+  const seconds=totalSeconds%60;
+  return `${days} روز، ${pad(hours)} ساعت، ${pad(minutes)} دقیقه و ${pad(seconds)} ثانیه`;
 }
-
-// تب‌ها
-const tabs=document.querySelectorAll('.tab-btn');
-const pages=document.querySelectorAll('.page');
-tabs.forEach(tab=>tab.addEventListener('click',()=>{
-  tabs.forEach(t=>t.classList.remove('active'));
-  pages.forEach(p=>p.classList.remove('active'));
-  tab.classList.add('active');
-  document.getElementById(tab.dataset.target).classList.add('active');
-}));
-
-// تنظیمات
-const settingsForm=document.getElementById('settingsForm');
-settingsForm.addEventListener('submit',e=>{
-  e.preventDefault();
-  localStorage.setItem('pricePerPack',document.getElementById('pricePerPack').value);
-  localStorage.setItem('cigsPerPack',document.getElementById('cigsPerPack').value);
-  localStorage.setItem('cigsPerDay',document.getElementById('cigsPerDay').value);
-  alert(currentLang==='fa'?'تنظیمات ذخیره شد ✅':'Settings saved ✅');
-});
-
-// مراحل سلامتی
-
-
-
-
-const healthStages = [
-  {name:'بازگشت اکسیژن و کربن مونوکسید', duration:8*3600, color:'#4caf50'}, // ۸ ساعت
-  {name:'کاهش خطر حمله قلبی', duration:24*3600, color:'#2196F3'}, // ۱ روز
-  {name:'بازگشت حواس چشایی و بویایی', duration:48*3600, color:'#FF9800'}, // ۲ روز
-  {name:'بهبود ظرفیت تنفسی', duration:60*24*3600, color:'#9C27B0'}, // حدود ۲ ماه
-  {name:'رفع وابستگی جسمی به نیکوتین', duration:10*24*3600, color:'#f44336'}, // ۷ تا ۱۰ روز
-  {name:'بهبود گردش خون و پوست', duration:90*24*3600, color:'#00BCD4'} // ۳ ماه
-];
-
-const progressContainer=document.querySelector('.health-progress');
-healthStages.forEach(stage=>{
-  const container=document.createElement('div'); container.className='progress-container';
-  const label=document.createElement('div'); label.className='progress-label';
-  label.innerHTML=`<span>${stage.name}</span><span class="percent">0%</span>`;
-  const bar=document.createElement('div'); bar.className='progress-bar';
-  const fill=document.createElement('div'); fill.className='progress-fill';
-  fill.style.background=stage.color;
-  bar.appendChild(fill);
-  container.appendChild(label);
-  container.appendChild(bar);
-  progressContainer.appendChild(container);
-  stage.element={fill:fill, percentLabel:label.querySelector('.percent')};
-});
-
-// تایمر و محاسبات
-let startTime=null;
-let timerInterval;
-const startBtn=document.getElementById('startQuit');
-const resetBtn=document.getElementById('resetQuit');
-
-function loadStartTime(){
-  const saved=localStorage.getItem('quitStartTime');
-  if(saved){startTime=new Date(saved); startTimer();}
-}
-function startTimer(){
-  updateStats();
-  timerInterval=setInterval(updateStats,1000);
-}
-startBtn.addEventListener('click',()=>{
-  startTime=new Date();
-  localStorage.setItem('quitStartTime',startTime);
-  startTimer();
-});
-resetBtn.addEventListener('click',()=>{
-  clearInterval(timerInterval);
-  localStorage.removeItem('quitStartTime');
-  startTime=null;
-  document.getElementById('timeDisplay').textContent='';
-  document.getElementById('cigsSaved').textContent='0';
-  document.getElementById('moneySaved').textContent='0 تومان';
-  document.getElementById('startDateDisplay').textContent='';
-  healthStages.forEach(s=>{s.element.fill.style.width='0%'; s.element.percentLabel.textContent='0%';});
-});
-
-// تاریخ شمسی
 function toJalaali(date){
-  const g_y=date.getFullYear(),g_m=date.getMonth()+1,g_d=date.getDate();
+  const g_y=date.getFullYear(), g_m=date.getMonth()+1, g_d=date.getDate();
   let gy=g_y-1600, gm=g_m-1, gd=g_d-1;
   let g_day_no=365*gy+Math.floor((gy+3)/4)-Math.floor((gy+99)/100)+Math.floor((gy+399)/400);
-  for(let i=0;i<gm;i++) g_day_no+=[31,28,31,30,31,30,31,31,30,31,30,31][i];
-  if(g_m>2 && ((g_y%4==0 && g_y%100!=0)||g_y%400==0)) g_day_no+=1;
+  const g_months=[31,28,31,30,31,30,31,31,30,31,30,31];
+  for(let i=0;i<gm;i++) g_day_no+=g_months[i];
+  if(g_m>2 && ((g_y%4==0 && g_y%100!=0) || (g_y%400==0))) g_day_no+=1;
   g_day_no+=gd;
   let j_day_no=g_day_no-79;
   let j_np=Math.floor(j_day_no/12053); j_day_no%=12053;
@@ -195,39 +162,282 @@ function toJalaali(date){
   if(j_day_no>=366){jy+=Math.floor((j_day_no-1)/365); j_day_no=(j_day_no-1)%365;}
   const jm=(j_day_no<186)?1+Math.floor(j_day_no/31):7+Math.floor((j_day_no-186)/30);
   const jd=(j_day_no<186)?1+(j_day_no%31):1+((j_day_no-186)%30);
-  return `${jy}/${jm.toString().padStart(2,'0')}/${jd.toString().padStart(2,'0')}`;
+  return `${jy}/${pad(jm)}/${pad(jd)}`;
 }
-function formatDuration(diff){
-  const days=Math.floor(diff/86400);
-  const hours=Math.floor((diff%86400)/3600);
-  const minutes=Math.floor((diff%3600)/60);
-  const seconds=diff%60;
-  if(currentLang==='fa')
-    return `${days} روز، ${hours} ساعت، ${minutes} دقیقه و ${seconds} ثانیه`;
-  else
-    return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+
+/* ---------- تنظیمات علمی مراحل سلامتی ---------- */
+const healthStages = [
+  {name:'بازگشت اکسیژن و کاهش کربن مونوکسید (CO)', duration:8*3600, color:'#4caf50'},
+  {name:'کاهش خطر حمله قلبی', duration:24*3600, color:'#2196F3'},
+  {name:'بازگشت حواس چشایی و بویایی', duration:48*3600, color:'#FF9800'},
+  {name:'بهبود ظرفیت تنفسی (قابل توجه ظرف 2-12 هفته)', duration:60*24*3600, color:'#9C27B0'},
+  {name:'کاهش وابستگی جسمی به نیکوتین', duration:10*24*3600, color:'#f44336'},
+  {name:'بهبود گردش خون و پوست (حدود 3 ماه)', duration:90*24*3600, color:'#00BCD4'}
+];
+
+/* ---------- المان‌ها ---------- */
+const timeDisplay = document.getElementById('timeDisplay');
+const startDate = document.getElementById('startDate');
+const cigsSavedEl = document.getElementById('cigsSaved');
+const moneySavedEl = document.getElementById('moneySaved');
+const healthContainer = document.getElementById('healthContainer');
+const startBtn = document.getElementById('startBtn');
+const resetBtn = document.getElementById('resetBtn');
+const changeNameBtn = document.getElementById('changeNameBtn');
+const userNameLabel = document.getElementById('userNameLabel');
+const pricePerPackInput = document.getElementById('pricePerPack');
+const cigsPerPackInput = document.getElementById('cigsPerPack');
+const cigsPerDayInput = document.getElementById('cigsPerDay');
+const settingsForm = document.getElementById('settingsForm');
+const musicBtn = document.getElementById('musicBtn');
+const bgAudio = document.getElementById('bgAudio');
+const personalList = document.getElementById('personalList');
+const allList = document.getElementById('allList');
+const bestRecord = document.getElementById('bestRecord');
+const tabPersonal = document.getElementById('tabPersonal');
+const tabAll = document.getElementById('tabAll');
+const personalTab = document.getElementById('personalTab');
+const allTab = document.getElementById('allTab');
+const clearRecordsBtn = document.getElementById('clearRecordsBtn');
+const exportBtn = document.getElementById('exportBtn');
+const importBtn = document.getElementById('importBtn');
+const changeNameInput = null;
+
+let startTime = null;
+let timerInterval = null;
+let stageElements = [];
+
+/* ---------- ساخت نوارهای سلامت ---------- */
+healthStages.forEach(s=>{
+  const row = document.createElement('div'); row.className='progress-row';
+  const label = document.createElement('div'); label.className='label';
+  label.innerHTML = `<span>${s.name}</span><span class="percent">0%</span>`;
+  const bar = document.createElement('div'); bar.className='bar';
+  const fill = document.createElement('div'); fill.className='fill'; fill.style.background = s.color;
+  bar.appendChild(fill);
+  row.appendChild(label);
+  row.appendChild(bar);
+  healthContainer.appendChild(row);
+  s.element = { fill, percentLabel: label.querySelector('.percent') };
+});
+
+/* ---------- ذخیره‌سازی در localStorage ---------- */
+const LS = {
+  pricePerPack: 'qs_pricePerPack',
+  cigsPerPack: 'qs_cigsPerPack',
+  cigsPerDay: 'qs_cigsPerDay',
+  start: 'qs_start',
+  records: 'qs_records',
+  user: 'qs_user'
+};
+
+function loadSettings(){
+  pricePerPackInput.value = localStorage.getItem(LS.pricePerPack) || 90000;
+  cigsPerPackInput.value = localStorage.getItem(LS.cigsPerPack) || 20;
+  cigsPerDayInput.value = localStorage.getItem(LS.cigsPerDay) || 15;
 }
-function updateStats(){
-  if(!startTime) return;
-  const now=new Date();
-  const diff=Math.floor((now-startTime)/1000);
-  document.getElementById('timeDisplay').textContent=formatDuration(diff);
-  document.getElementById('startDateDisplay').textContent=(currentLang==='fa'?'زمان شروع ترک: ':'Quit start: ')+toJalaali(startTime)+' '+startTime.toLocaleTimeString();
-  const cigsPerDay=Number(localStorage.getItem('cigsPerDay'))||15;
-  const cigsSaved=Math.floor((diff/86400)*cigsPerDay);
-  document.getElementById('cigsSaved').textContent=cigsSaved;
-  const pricePerPack=Number(localStorage.getItem('pricePerPack'))||90000;
-  const cigsPerPack=Number(localStorage.getItem('cigsPerPack'))||20;
-  const moneySaved=Math.floor((cigsSaved/cigsPerPack)*pricePerPack);
-  document.getElementById('moneySaved').textContent=currentLang==='fa'?moneySaved+' تومان':moneySaved+' Toman';
-  // سلامت
-  healthStages.forEach(stage=>{
-    const percent=Math.min(100,(diff/stage.duration)*100);
-    stage.element.fill.style.width=percent+'%';
-    stage.element.percentLabel.textContent=Math.floor(percent)+'%';
+loadSettings();
+
+function saveSettings(){
+  localStorage.setItem(LS.pricePerPack, pricePerPackInput.value || 90000);
+  localStorage.setItem(LS.cigsPerPack, cigsPerPackInput.value || 20);
+  localStorage.setItem(LS.cigsPerDay, cigsPerDayInput.value || 15);
+}
+
+/* ---------- مدیریت کاربر و رکوردها ---------- */
+let allRecords = JSON.parse(localStorage.getItem(LS.records) || '[]');
+let currentUser = localStorage.getItem(LS.user) || null;
+
+function ensureUser(){
+  currentUser = localStorage.getItem(LS.user) || null;
+  if(!currentUser){
+    const name = prompt('لطفاً نام خود را وارد کنید:') || '';
+    currentUser = name.trim() || 'کاربر';
+    localStorage.setItem(LS.user, currentUser);
+  }
+  userNameLabel.textContent = currentUser;
+  // به‌روزرسانی رکوردهای قدیمی بدون user
+  let changed=false;
+  allRecords = allRecords.map(r=>{
+    if(!r.user || r.user===''){ changed=true; return {...r, user: currentUser}; }
+    if(r.user==='کاربر'){ changed=true; return {...r, user: currentUser}; }
+    return r;
+  });
+  if(changed) localStorage.setItem(LS.records, JSON.stringify(allRecords));
+}
+ensureUser();
+
+/* ---------- رندر رکوردها ---------- */
+function renderRecords(){
+  // شخصی
+  const personal = allRecords.filter(r=>r.user===currentUser).sort((a,b)=>b.duration-a.duration);
+  bestRecord.textContent = personal.length ? `${formatDuration(personal[0].duration)} — ${toJalaali(new Date(personal[0].startTime))}` : 'هنوز رکوردی ندارید';
+  personalList.innerHTML = '';
+  personal.forEach(r=>{
+    const li = document.createElement('li');
+    li.textContent = `${formatDuration(r.duration)} — ${toJalaali(new Date(r.startTime))}`;
+    personalList.appendChild(li);
+  });
+  // همه
+  allList.innerHTML = '';
+  allRecords.slice().sort((a,b)=>b.duration-a.duration).forEach(r=>{
+    const li = document.createElement('li');
+    li.textContent = `${r.user}: ${formatDuration(r.duration)} — ${toJalaali(new Date(r.startTime))}`;
+    allList.appendChild(li);
   });
 }
-loadStartTime();
+renderRecords();
+
+/* ---------- مدیریت تایمر ---------- */
+function loadStart(){
+  const s = localStorage.getItem(LS.start);
+  if(s){ startTime = new Date(s); startTimer(); }
+}
+loadStart();
+
+function startTimer(){
+  if(timerInterval) clearInterval(timerInterval);
+  updateUI(); // بلافاصله یک بار
+  timerInterval = setInterval(updateUI, 1000);
+}
+
+function updateUI(){
+  if(!startTime) return;
+  const now = new Date();
+  const diff = Math.floor((now - startTime) / 1000);
+  timeDisplay.textContent = formatDuration(diff);
+  startDate.textContent = 'شروع ترک: ' + toJalaali(startTime) + ' ' + startTime.toLocaleTimeString();
+  const cigsPerDay = Number(localStorage.getItem(LS.cigsPerDay) || cigsPerDayInput.value || 15);
+  const cigsSaved = Math.floor((diff/86400) * cigsPerDay);
+  cigsSavedEl.textContent = cigsSaved;
+  const pricePerPack = Number(localStorage.getItem(LS.pricePerPack) || pricePerPackInput.value || 90000);
+  const cigsPerPack = Number(localStorage.getItem(LS.cigsPerPack) || cigsPerPackInput.value || 20);
+  const moneySaved = Math.floor((cigsSaved / cigsPerPack) * pricePerPack);
+  moneySavedEl.textContent = moneySaved + ' تومان';
+  // update health stages progress
+  healthStages.forEach(stage=>{
+    const percent = Math.min(100, (diff / stage.duration) * 100);
+    stage.element.fill.style.width = percent + '%';
+    stage.element.percentLabel.textContent = Math.floor(percent) + '%';
+  });
+}
+
+/* ---------- رویدادها ---------- */
+startBtn.addEventListener('click', ()=>{
+  ensureUser();
+  startTime = new Date();
+  localStorage.setItem(LS.start, startTime.toISOString());
+  startTimer();
+  alert('شروع ثبت شد. تبریک بر تصمیم شما!');
+});
+
+resetBtn.addEventListener('click', ()=>{
+  if(startTime){
+    const diff = Math.floor((new Date() - startTime) / 1000);
+    allRecords.push({ user: currentUser, startTime: startTime.toISOString(), duration: diff });
+    localStorage.setItem(LS.records, JSON.stringify(allRecords));
+    renderRecords();
+  }
+  // پاک‌سازی وضعیت
+  startTime = null;
+  localStorage.removeItem(LS.start);
+  if(timerInterval) clearInterval(timerInterval);
+  timeDisplay.textContent = '0 روز، 00 ساعت، 00 دقیقه و 00 ثانیه';
+  startDate.textContent = '--';
+  cigsSavedEl.textContent = '0';
+  moneySavedEl.textContent = '0 تومان';
+  // ریست نوارها
+  healthStages.forEach(s=>{
+    s.element.fill.style.width = '0%';
+    s.element.percentLabel.textContent = '0%';
+  });
+});
+
+changeNameBtn.addEventListener('click', ()=>{
+  const newName = prompt('نام جدید را وارد کنید:') || '';
+  if(!newName.trim()) return;
+  const oldName = currentUser;
+  currentUser = newName.trim();
+  localStorage.setItem(LS.user, currentUser);
+  userNameLabel.textContent = currentUser;
+  // اختصاص نام فعلی به رکوردهای بدون نام یا رکوردهایی که با placeholder 'کاربر' ثبت شده‌اند
+  let changed=false;
+  allRecords = allRecords.map(r=>{
+    if(!r.user || r.user==='' || r.user==='کاربر'){ changed=true; return {...r, user: currentUser}; }
+    return r;
+  });
+  if(changed){ localStorage.setItem(LS.records, JSON.stringify(allRecords)); renderRecords(); }
+  alert('نام تغییر کرد به: ' + currentUser);
+});
+
+settingsForm.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  saveSettings();
+  alert('تنظیمات ذخیره شد');
+});
+
+// تب رکوردها
+tabPersonal.addEventListener('click', ()=>{
+  tabPersonal.classList.add('active'); tabAll.classList.remove('active');
+  personalTab.style.display='block'; allTab.style.display='none';
+});
+tabAll.addEventListener('click', ()=>{
+  tabAll.classList.add('active'); tabPersonal.classList.remove('active');
+  personalTab.style.display='none'; allTab.style.display='block';
+});
+
+// پاک کردن رکوردها
+clearRecordsBtn.addEventListener('click', ()=>{
+  if(confirm('آیا مطمئنی همه رکوردها حذف شوند؟')){ allRecords=[]; localStorage.setItem(LS.records, JSON.stringify(allRecords)); renderRecords(); }
+});
+
+// خروجی JSON
+exportBtn.addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify(allRecords, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='quit_smoking_records.json'; document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+});
+
+// وارد کردن JSON (کاربر باید محتوا را paste کند)
+importBtn.addEventListener('click', ()=>{
+  const txt = prompt('لطفاً JSON رکوردها را الصاق کنید:');
+  if(!txt) return;
+  try{
+    const arr = JSON.parse(txt);
+    if(Array.isArray(arr)){
+      // merge (ولی از ورود رکوردهای نامعتبر جلوگیری کن)
+      arr.forEach(r=>{ if(r.startTime && r.duration) allRecords.push(r); });
+      localStorage.setItem(LS.records, JSON.stringify(allRecords));
+      renderRecords();
+      alert('رکوردها وارد شدند');
+    } else alert('JSON نامعتبر است');
+  } catch(err){ alert('خطا در خواندن JSON: ' + err.message); }
+});
+
+// موزیک کنترل
+let musicOn = false;
+musicBtn.addEventListener('click', ()=>{
+  musicOn = !musicOn;
+  if(musicOn){ bgAudio.play().catch(()=>{}); musicBtn.textContent='موزیک: روشن'; } 
+  else { bgAudio.pause(); musicBtn.textContent='موزیک: خاموش'; }
+});
+bgAudio.volume = 0.12;
+
+// nav bottom (فقط راهنما)
+document.getElementById('navStatus').addEventListener('click', ()=>{ alert('در بخش وضعیت می‌توانید روند ترک را ببینید'); });
+document.getElementById('navSettings').addEventListener('click', ()=>{ alert('برای تنظیمات از فرم سمت راست استفاده کنید'); });
+document.getElementById('navRecords').addEventListener('click', ()=>{ tabAll.click(); window.scrollTo({top:0,behavior:'smooth'}); });
+
+// شروع خودکار اگر تایم قبلاً ثبت شده
+if(localStorage.getItem(LS.start)){
+  startTime = new Date(localStorage.getItem(LS.start));
+  startTimer();
+}
+
+// رندر نهایی رکوردها
+renderRecords();
+
 </script>
 </body>
 </html>
