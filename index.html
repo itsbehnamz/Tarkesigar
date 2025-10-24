@@ -123,14 +123,19 @@ settingsForm.addEventListener('submit',e=>{
 });
 
 // مراحل سلامتی
-const healthStages=[
-  {name:'بازگشت اکسیژن و کربن مونوکسید', duration:8*3600, color:'#4caf50'},
-  {name:'کاهش خطر مرگ ناگهانی', duration:24*3600, color:'#2196F3'},
-  {name:'حواس چشایی و بویایی', duration:48*3600, color:'#FF9800'},
-  {name:'عملکرد تنفسی استاندارد', duration:14*24*3600, color:'#9C27B0'},
-  {name:'رفع وابستگی جسمی به نیکوتین', duration:30*24*3600, color:'#f44336'},
-  {name:'بهبود گردش خون و پوست', duration:90*24*3600, color:'#00BCD4'}
+
+
+
+
+const healthStages = [
+  {name:'بازگشت اکسیژن و کربن مونوکسید', duration:8*3600, color:'#4caf50'}, // ۸ ساعت
+  {name:'کاهش خطر حمله قلبی', duration:24*3600, color:'#2196F3'}, // ۱ روز
+  {name:'بازگشت حواس چشایی و بویایی', duration:48*3600, color:'#FF9800'}, // ۲ روز
+  {name:'بهبود ظرفیت تنفسی', duration:60*24*3600, color:'#9C27B0'}, // حدود ۲ ماه
+  {name:'رفع وابستگی جسمی به نیکوتین', duration:10*24*3600, color:'#f44336'}, // ۷ تا ۱۰ روز
+  {name:'بهبود گردش خون و پوست', duration:90*24*3600, color:'#00BCD4'} // ۳ ماه
 ];
+
 const progressContainer=document.querySelector('.health-progress');
 healthStages.forEach(stage=>{
   const container=document.createElement('div'); container.className='progress-container';
