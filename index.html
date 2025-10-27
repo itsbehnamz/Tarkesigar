@@ -222,6 +222,40 @@ let startTime = null;
 let timerInterval = null;
 let stageElements = [];
 
+
+
+
+
+
+
+// المان‌های رکورد قبلی
+const prevDays = document.getElementById('prevDays');
+const prevHours = document.getElementById('prevHours');
+const prevMinutes = document.getElementById('prevMinutes');
+const prevSeconds = document.getElementById('prevSeconds');
+const applyPrevious = document.getElementById('applyPrevious');
+
+// اضافه کردن زمان قبلی
+applyPrevious.addEventListener('click', ()=>{
+  const d = +prevDays.value || 0;
+  const h = +prevHours.value || 0;
+  const m = +prevMinutes.value || 0;
+  const s = +prevSeconds.value || 0;
+  const total = d*86400 + h*3600 + m*60 + s;
+
+  if(total <= 0){
+    alert('لطفاً مقداری معتبر وارد کنید');
+    return;
+  }
+
+  if(!startTime) startTime = new Date();
+  startTime = new Date(startTime.getTime() - total*1000);
+  localStorage.setItem(LS.start, startTime.toISOString());
+  updateUI();
+  alert(`⏱ زمان قبلی اضافه شد: ${formatDuration(total)}`);
+});
+
+
 /* ---------- ساخت نوارهای سلامت ---------- */
 healthStages.forEach(s=>{
   const row = document.createElement('div'); row.className='progress-row';
@@ -452,23 +486,6 @@ if(localStorage.getItem(LS.start)){
 
 // رندر نهایی رکوردها
 renderRecords();
-
-
-
-
-
-
-// افزودن رکورد قبلی
-document.getElementById('applyPrevious').addEventListener('click', ()=>{
-  const d = +prevDays.value||0, h = +prevHours.value||0, m = +prevMinutes.value||0, s = +prevSeconds.value||0;
-  const total = d*86400 + h*3600 + m*60 + s;
-  if(!startTime) startTime = new Date();
-  startTime = new Date(startTime.getTime() - total*1000);
-  localStorage.setItem(LS.start, startTime.toISOString());
-  alert('⏱ زمان قبلی اضافه شد ✅');
-  updateUI();
-});
-
 
 
 
