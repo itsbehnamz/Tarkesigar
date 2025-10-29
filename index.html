@@ -539,5 +539,81 @@ toggle.addEventListener("click", () => {
 
 
 
+
+
+
+
+
+
+<!-- نسخه کامل ترک سیگار برای ربات تلگرام یا مرورگر بدون Notification API --><div id="nicotine-tracker" style="font-family:Tahoma, sans-serif; max-width:800px; margin:auto; padding:20px; background:#1e1b18; color:#ff9f43; border-radius:16px; box-shadow:0 6px 20px rgba(0,0,0,0.5);">
+<h2 style="text-align:center; color:#ffa502;">تست وابستگی و برنامه ترک سیگار</h2>
+<div id="reminder" style="background:#352f2b; padding:10px; border-radius:10px; margin-bottom:15px; text-align:center;"></div>
+<form id="nicotineForm">
+<label>تعداد سیگار در روز:</label>
+<select id="cigsPerDay">
+<option value="0">۰</option>
+<option value="1">۱-۵</option>
+<option value="2">۶-۱۰</option>
+<option value="3">۱۱-۲۰</option>
+<option value="4">بیشتر از ۲۰</option>
+</select>
+<label>زمان اولین سیگار بعد از بیداری:</label>
+<select id="firstCig">
+<option value="0">بعد از ۱ ساعت</option>
+<option value="1">۳۰ دقیقه تا ۱ ساعت</option>
+<option value="2">۱۰-۳۰ دقیقه</option>
+<option value="3">کمتر از ۱۰ دقیقه</option>
+</select>
+<label>چقدر ترک برای شما سخت است؟</label>
+<select id="difficultyQuit">
+<option value="0">خیلی راحت</option>
+<option value="1">نسبتاً راحت</option>
+<option value="2">سخت</option>
+<option value="3">خیلی سخت</option>
+</select>
+<label>شدت میل به سیگار در طول روز:</label>
+<select id="craveIntensity">
+<option value="0">کم</option>
+<option value="1">متوسط</option>
+<option value="2">زیاد</option>
+<option value="3">خیلی زیاد</option>
+</select>
+<button type="button" onclick="calculatePlan()" style="margin-top:15px; padding:12px; width:100%; background:#ff9f43; border:none; border-radius:10px; font-weight:bold; cursor:pointer; color:#1e1b18;">شروع</button>
+</form>
+<div id="result" style="display:none; margin-top:15px; padding:10px; background:#352f2b; border-radius:10px; text-align:center; font-weight:bold;"></div>
+<canvas id="scoreChart" style="display:none; margin-top:20px;"></canvas>
+<canvas id="progressChart" style="display:none; margin-top:20px;"></canvas>
+<div id="plan" style="display:none; margin-top:20px; background:#352f2b; padding:15px; border-radius:10px; line-height:1.6;"></div>
+<div id="dailyCheck" style="display:none; margin-top:15px; background:#352f2b; padding:15px; border-radius:10px;"></div>
+<div id="progressPercent" style="display:none; margin-top:10px; font-weight:bold; text-align:center;"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let historyScores = [];
+let dailyProgress = Array(30).fill(false);function showReminder(){ const now = new Date(); const hours = now.getHours(); const reminderDiv = document.getElementById('reminder'); if(hours===9 || hours===21){ reminderDiv.textContent = 'یادآوری: لطفاً وضعیت ترک امروز خود را ثبت کنید!'; } else { reminderDiv.textContent = ''; } } setInterval(showReminder, 60000); // بررسی هر دقیقه showReminder();
+
+function calculatePlan(){ const cigs = parseInt(document.getElementById('cigsPerDay').value); const first = parseInt(document.getElementById('firstCig').value); const difficulty = parseInt(document.getElementById('difficultyQuit').value); const crave = parseInt(document.getElementById('craveIntensity').value); let score = cigs + first + difficulty + crave; historyScores.push(score); let level = ''; if(score<=3) level='کم'; else if(score<=7) level='متوسط'; else level='زیاد'; document.getElementById('result').style.display='block'; document.getElementById('result').textContent=سطح وابستگی: ${level} (امتیاز: ${score}/12); drawScoreChart(); displayPlan(level); displayDailyCheck(); updateProgressPercent(); drawProgressChart(); }
+
+function drawScoreChart(){ const ctx=document.getElementById('scoreChart').getContext('2d'); document.getElementById('scoreChart').style.display='block'; if(window.scoreChart) window.scoreChart.destroy(); window.scoreChart=new Chart(ctx,{type:'line',data:{labels:historyScores.map((_,i)=>تست ${i+1}),datasets:[{label:'امتیاز وابستگی',data:historyScores,backgroundColor:'rgba(255,159,67,0.4)',borderColor:'rgba(255,159,67,1)',borderWidth:2,fill:true,tension:0.3}]} ,options:{responsive:true,scales:{y:{beginAtZero:true,max:12}}}}); }
+
+function displayPlan(level){ const planDiv=document.getElementById('plan'); planDiv.style.display='block'; let steps=[]; if(level==='کم') steps=['روز 1-5: کاهش 1-2 سیگار و ورزش سبک','روز 6-10: جایگزین‌های بدون نیکوتین','روز 11-20: مدیتیشن و کنترل استرس','روز 21-30: ترک کامل']; else if(level==='متوسط') steps=['روز 1-5: کاهش تعداد سیگار به نصف، آدامس نیکوتین','روز 6-10: تمرینات تنفسی و مدیریت وسوسه‌ها','روز 11-20: کاهش بیشتر و فعالیت‌های جایگزین','روز 21-30: ترک کامل با حمایت خانواده']; else steps=['روز 1-5: مشاوره و داروهای جایگزین','روز 6-10: کاهش تعداد و مدیریت استرس','روز 11-20: ادامه دارو و روانشناسی','روز 21-30: ترک کامل و ثبت پیشرفت']; planDiv.innerHTML='<h3>برنامه ۳۰ روزه:</h3><ul>'+steps.map(s=><li>${s}</li>).join('')+'</ul>'; }
+
+function displayDailyCheck(){ const dailyDiv=document.getElementById('dailyCheck'); dailyDiv.style.display='block'; dailyDiv.innerHTML='<h3>چک‌لیست روزانه:</h3><ul>'+dailyProgress.map((done,i)=><li><input type='checkbox' id='day${i}' ${done?'checked':''} onchange='updateDaily(${i})'> روز ${i+1}</li>).join('')+'</ul>'; }
+
+function updateDaily(day){ dailyProgress[day]=!dailyProgress[day]; updateProgressPercent(); drawProgressChart(); }
+
+function updateProgressPercent(){ const percent=Math.round((dailyProgress.filter(d=>d).length/dailyProgress.length)*100); const progressDiv=document.getElementById('progressPercent'); progressDiv.style.display='block'; progressDiv.textContent=درصد پیشرفت: ${percent}%; }
+
+function drawProgressChart(){ const ctx=document.getElementById('progressChart').getContext('2d'); document.getElementById('progressChart').style.display='block'; if(window.progressChart) window.progressChart.destroy(); window.progressChart=new Chart(ctx,{type:'bar',data:{labels:dailyProgress.map((_,i)=>روز ${i+1}),datasets:[{label:'روزهای موفق',data:dailyProgress.map(d=>d?1:0),backgroundColor:'rgba(255,159,67,0.6)'}]},options:{responsive:true,scales:{y:{beginAtZero:true,max:1}}}}); }
+
+</script>
+
+
+
+
+
+
+
+
 </body>
 </html>
