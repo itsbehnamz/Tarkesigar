@@ -541,32 +541,56 @@ toggle.addEventListener("click", () => {
 
 
 
-
-
-<!-- قبل از <body> قرار بده -->
 <style>
-/* پس‌زمینه تمام صفحه */
-#backgroundEffect {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1; /* پشت متن و دکمه‌ها */
-  background: linear-gradient(270deg, #0b3d0b, #2c003e, #001f3f, #663300, #4b1e00);
-  background-size: 1000% 1000%; /* برای حرکت نرم رنگ‌ها */
-  animation: gradientShift 30s ease infinite;
+.vert-lines-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1;
 }
 
-/* انیمیشن تغییر رنگ آرام */
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.vert-line {
+    position: absolute;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(to bottom, #2affff, #ff22ff);
+    opacity: 0.4;
+    animation: moveVert 3s linear infinite;
+}
+
+@keyframes moveVert {
+    0% { transform: translateY(-150%); }
+    100% { transform: translateY(150%); }
 }
 </style>
 
-<div id="backgroundEffect"></div>
+<div class="vert-lines-wrapper" id="vertLines"></div>
+
+<script>
+(function () {
+    var count = 50; 
+    var wrapper = document.getElementById("vertLines");
+    for (var i = 0; i < count; i++) {
+        var line = document.createElement("div");
+        line.className = "vert-line";
+        var leftPos = Math.random() * 100;
+        var height = 50 + Math.random() * 200;
+        var duration = 2 + Math.random() * 3;
+        var direction = Math.random() < 0.5 ? "normal" : "reverse";
+
+        line.style.left = leftPos + "vw";
+        line.style.height = height + "px";
+        line.style.animationDuration = duration + "s";
+        line.style.animationDirection = direction;
+
+        wrapper.appendChild(line);
+    }
+})();
+</script>
 
 
 
