@@ -542,56 +542,56 @@ toggle.addEventListener("click", () => {
 
 
 <style>
-.vert-lines-wrapper {
+.smoke-wrapper {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
-    overflow: hidden;
     z-index: -1;
+    overflow: hidden;
 }
 
-.vert-line {
+.smoke {
     position: absolute;
-    width: 2px;
-    height: 100px;
-    background: linear-gradient(to bottom, #2affff, #ff22ff);
-    opacity: 0.4;
-    animation: moveVert 3s linear infinite;
+    bottom: -100px;
+    width: 8px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(200,200,200,0.4) 10%, rgba(255,255,255,0) 70%);
+    filter: blur(3px);
+    animation: rise 6s linear infinite;
+    opacity: 0.35;
+    border-radius: 50%;
 }
 
-@keyframes moveVert {
-    0% { transform: translateY(-150%); }
-    100% { transform: translateY(150%); }
+@keyframes rise {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity:0.25; }
+    30% { transform: translateY(-30vh) translateX(-10px) scale(1.2); opacity:0.4; }
+    60% { transform: translateY(-60vh) translateX(10px) scale(1.4); opacity:0.3; }
+    100% { transform: translateY(-100vh) translateX(-5px) scale(1.6); opacity:0; }
 }
 </style>
 
-<div class="vert-lines-wrapper" id="vertLines"></div>
+<div class="smoke-wrapper" id="smokeArea"></div>
 
 <script>
-(function () {
-    var count = 50; 
-    var wrapper = document.getElementById("vertLines");
-    for (var i = 0; i < count; i++) {
-        var line = document.createElement("div");
-        line.className = "vert-line";
-        var leftPos = Math.random() * 100;
-        var height = 50 + Math.random() * 200;
-        var duration = 2 + Math.random() * 3;
-        var direction = Math.random() < 0.5 ? "normal" : "reverse";
+(function(){
+    var count = 25; // تعداد رشته دود
+    var container = document.getElementById("smokeArea");
 
-        line.style.left = leftPos + "vw";
-        line.style.height = height + "px";
-        line.style.animationDuration = duration + "s";
-        line.style.animationDirection = direction;
-
-        wrapper.appendChild(line);
+    for(var i=0;i<count;i++){
+        var s = document.createElement("div");
+        s.className = "smoke";
+        s.style.left = (Math.random()*100) + "vw";
+        s.style.animationDelay = (Math.random()*4) + "s";
+        s.style.animationDuration = (5 + Math.random()*3) + "s";
+        s.style.width = (5 + Math.random()*6) + "px";
+        s.style.height = (150 + Math.random()*250) + "px";
+        container.appendChild(s);
     }
 })();
 </script>
-
 
 
 
