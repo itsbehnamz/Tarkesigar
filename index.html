@@ -540,8 +540,12 @@ toggle.addEventListener("click", () => {
 
 
 
+
+
+
+
 <style>
-.dandelion-wrapper {
+.modern-dots {
     position: fixed;
     top: 0;
     left: 0;
@@ -552,57 +556,46 @@ toggle.addEventListener("click", () => {
     overflow: hidden;
 }
 
-.seed {
+.dot {
     position: absolute;
-    width: 12px;
-    height: 12px;
-    background: radial-gradient(circle, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0) 80%);
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,255,255,0));
     border-radius: 50%;
-    opacity: 0.75;
-    transform: rotate(0deg);
-    animation: float linear infinite;
-    filter: blur(0.5px);
-}
-.seed::after {
-    content: "";
-    position: absolute;
-    top: -12px;
-    left: 4px;
-    width: 1px;
-    height: 18px;
-    background: rgba(255,255,255,0.8);
-    transform-origin: bottom center;
+    opacity: 0.7;
+    animation: floatDots linear infinite;
+    filter: blur(1px);
 }
 
-@keyframes float {
-    0% { transform: translate(0, 0) rotate(0deg); opacity:0.8; }
-    30% { transform: translate(-20px, -80px) rotate(20deg); opacity:0.85; }
-    60% { transform: translate(40px, -160px) rotate(-10deg); opacity:0.7; }
-    100% { transform: translate(-10px, -240px) rotate(10deg); opacity:0; }
+@keyframes floatDots {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
+    30% { transform: translateY(-50px) translateX(-20px) scale(1.2); opacity: 1; }
+    60% { transform: translateY(-120px) translateX(10px) scale(0.9); opacity: 0.6; }
+    100% { transform: translateY(-200px) translateX(-10px) scale(1.3); opacity: 0; }
 }
 </style>
 
-<div class="dandelion-wrapper" id="dandelions"></div>
+<div class="modern-dots" id="modernDots"></div>
 
 <script>
 (function(){
-    var count = 35; 
-    var wrapper = document.getElementById("dandelions");
+    var count = 45; // تعداد نقطه ها
+    var wrapper = document.getElementById("modernDots");
+    var colors = ["#ff5f8c","#7afcff","#b967ff","#ffa93f","#5cff5c","#4e8cff"];
 
     for(var i=0;i<count;i++){
-        var s = document.createElement("div");
-        s.className = "seed";
-        s.style.left = Math.random()*100 + "vw";
-        s.style.top = Math.random()*100 + "vh";
-        s.style.animationDuration = (6 + Math.random()*5) + "s";
-        s.style.animationDelay = (Math.random()*5) + "s";
-        s.style.width = (10 + Math.random()*6) + "px";
-        s.style.height = s.style.width;
-        wrapper.appendChild(s);
+        var d = document.createElement("div");
+        d.className = "dot";
+        d.style.left = Math.random()*100 + "vw";
+        d.style.top = Math.random()*100 + "vh";
+        d.style.animationDuration = (4 + Math.random()*5) + "s";
+        d.style.animationDelay = (Math.random()*4) + "s";
+        d.style.width = d.style.height = (6 + Math.random()*8) + "px";
+        d.style.background = "radial-gradient(circle,"+colors[Math.floor(Math.random()*colors.length)]+",rgba(255,255,255,0))";
+        wrapper.appendChild(d);
     }
 })();
 </script>
-
 
 
 
