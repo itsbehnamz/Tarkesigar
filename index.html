@@ -543,10 +543,9 @@ toggle.addEventListener("click", () => {
 
 
 
-
 <!-- قبل از <body> قرار بده -->
 <style>
-/* پس‌زمینه متحرک نورانی */
+/* پس‌زمینه تمام صفحه */
 #backgroundEffect {
   position: fixed;
   top: 0;
@@ -554,50 +553,20 @@ toggle.addEventListener("click", () => {
   width: 100%;
   height: 100%;
   z-index: -1; /* پشت متن و دکمه‌ها */
-  overflow: hidden;
+  background: linear-gradient(270deg, #0b3d0b, #2c003e, #001f3f, #663300, #4b1e00);
+  background-size: 1000% 1000%; /* برای حرکت نرم رنگ‌ها */
+  animation: gradientShift 30s ease infinite;
 }
 
-.colorCircle {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: float 20s linear infinite;
-  mix-blend-mode: screen; /* ترکیب رنگ‌ها بصورت نورانی */
-}
-
-@keyframes float {
-  0% { transform: translateY(100vh) scale(0.5); }
-  50% { transform: translateY(50vh) scale(1); }
-  100% { transform: translateY(-100vh) scale(0.5); }
+/* انیمیشن تغییر رنگ آرام */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 </style>
 
 <div id="backgroundEffect"></div>
-
-<script>
-// رنگ‌های تیره و پررنگ
-const colors = [
-  "#0b3d0b", // سبز تیره
-  "#2c003e", // بنفش تیره
-  "#001f3f", // آبی تیره
-  "#663300", // قهوه‌ای تیره
-  "#4b1e00"  // نارنجی تیره
-];
-
-const background = document.getElementById("backgroundEffect");
-
-for(let i=0; i<20; i++){
-  let circle = document.createElement("div");
-  circle.classList.add("colorCircle");
-  let size = Math.random() * 200 + 100;
-  circle.style.width = `${size}px`;
-  circle.style.height = `${size}px`;
-  circle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-  circle.style.left = `${Math.random() * 100}%`;
-  circle.style.animationDuration = `${10 + Math.random() * 20}s`;
-  background.appendChild(circle);
-}
-</script>
 
 
 
