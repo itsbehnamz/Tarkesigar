@@ -540,9 +540,8 @@ toggle.addEventListener("click", () => {
 
 
 
-
 <style>
-.smoke-wrapper {
+.dandelion-wrapper {
     position: fixed;
     top: 0;
     left: 0;
@@ -553,45 +552,57 @@ toggle.addEventListener("click", () => {
     overflow: hidden;
 }
 
-.smoke {
+.seed {
     position: absolute;
-    bottom: -100px;
-    width: 8px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(200,200,200,0.4) 10%, rgba(255,255,255,0) 70%);
-    filter: blur(3px);
-    animation: rise 6s linear infinite;
-    opacity: 0.35;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0) 80%);
     border-radius: 50%;
+    opacity: 0.75;
+    transform: rotate(0deg);
+    animation: float linear infinite;
+    filter: blur(0.5px);
+}
+.seed::after {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 4px;
+    width: 1px;
+    height: 18px;
+    background: rgba(255,255,255,0.8);
+    transform-origin: bottom center;
 }
 
-@keyframes rise {
-    0% { transform: translateY(0) translateX(0) scale(1); opacity:0.25; }
-    30% { transform: translateY(-30vh) translateX(-10px) scale(1.2); opacity:0.4; }
-    60% { transform: translateY(-60vh) translateX(10px) scale(1.4); opacity:0.3; }
-    100% { transform: translateY(-100vh) translateX(-5px) scale(1.6); opacity:0; }
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); opacity:0.8; }
+    30% { transform: translate(-20px, -80px) rotate(20deg); opacity:0.85; }
+    60% { transform: translate(40px, -160px) rotate(-10deg); opacity:0.7; }
+    100% { transform: translate(-10px, -240px) rotate(10deg); opacity:0; }
 }
 </style>
 
-<div class="smoke-wrapper" id="smokeArea"></div>
+<div class="dandelion-wrapper" id="dandelions"></div>
 
 <script>
 (function(){
-    var count = 25; // تعداد رشته دود
-    var container = document.getElementById("smokeArea");
+    var count = 35; 
+    var wrapper = document.getElementById("dandelions");
 
     for(var i=0;i<count;i++){
         var s = document.createElement("div");
-        s.className = "smoke";
-        s.style.left = (Math.random()*100) + "vw";
-        s.style.animationDelay = (Math.random()*4) + "s";
-        s.style.animationDuration = (5 + Math.random()*3) + "s";
-        s.style.width = (5 + Math.random()*6) + "px";
-        s.style.height = (150 + Math.random()*250) + "px";
-        container.appendChild(s);
+        s.className = "seed";
+        s.style.left = Math.random()*100 + "vw";
+        s.style.top = Math.random()*100 + "vh";
+        s.style.animationDuration = (6 + Math.random()*5) + "s";
+        s.style.animationDelay = (Math.random()*5) + "s";
+        s.style.width = (10 + Math.random()*6) + "px";
+        s.style.height = s.style.width;
+        wrapper.appendChild(s);
     }
 })();
 </script>
+
 
 
 
